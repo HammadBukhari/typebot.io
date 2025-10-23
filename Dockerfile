@@ -113,3 +113,7 @@ ENTRYPOINT ./${SCOPE}-entrypoint.sh
 
 EXPOSE 3000
 ENV PORT=3000
+
+
+# docker build --platform linux/amd64 -f Dockerfile --build-arg SCOPE=builder -t typebot-builder:latest .
+# docker build --platform linux/amd64 -f Dockerfile --build-arg SCOPE=viewer -t typebot-viewer:latest .
