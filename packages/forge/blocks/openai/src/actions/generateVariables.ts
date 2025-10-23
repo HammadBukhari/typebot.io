@@ -18,6 +18,7 @@ export const generateVariables = createAction({
     models: { type: "static", items: chatModels.concat(reasoningModels) },
     getModel: ({ credentials, model }) =>
       createOpenAI({
+        baseURL: credentials.baseUrl,
         apiKey: credentials.apiKey,
         compatibility: "strict",
       })(model),
@@ -46,6 +47,7 @@ export const generateVariables = createAction({
 
       return runGenerateVariables({
         model: createOpenAI({
+          baseURL: credentials.baseUrl ?? options.baseUrl,
           apiKey: credentials.apiKey,
           compatibility: "strict",
         })(options.model),
