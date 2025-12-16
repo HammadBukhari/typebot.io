@@ -1,9 +1,10 @@
-import { Stack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { defaultTypebotLinkOptions } from "@typebot.io/blocks-logic/typebotLink/constants";
 import type { TypebotLinkBlock } from "@typebot.io/blocks-logic/typebotLink/schema";
 import { isNotEmpty } from "@typebot.io/lib/utils";
-import { SwitchWithLabel } from "@/components/inputs/SwitchWithLabel";
+import { Field } from "@typebot.io/ui/components/Field";
+import { MoreInfoTooltip } from "@typebot.io/ui/components/MoreInfoTooltip";
+import { Switch } from "@typebot.io/ui/components/Switch";
 import { useTypebot } from "@/features/editor/providers/TypebotProvider";
 import { trpc } from "@/lib/queryClient";
 import { GroupsDropdown } from "./GroupsDropdown";
@@ -44,7 +45,7 @@ export const TypebotLinkForm = ({ options, onOptionsChange }: Props) => {
     options?.typebotId === "current";
 
   return (
-    <Stack>
+    <div className="flex flex-col gap-2">
       {typebot && (
         <TypebotsDropdown
           idsToExclude={[typebot.id]}
@@ -72,15 +73,22 @@ export const TypebotLinkForm = ({ options, onOptionsChange }: Props) => {
         />
       )}
       {!isCurrentTypebotSelected && (
-        <SwitchWithLabel
-          label="Merge answers"
-          moreInfoContent="If enabled, the answers collected in the linked typebot will be merged with the results of the current typebot."
-          initialValue={
-            options?.mergeResults ?? defaultTypebotLinkOptions.mergeResults
-          }
-          onCheckChange={updateMergeResults}
-        />
+        <Field.Root className="flex-row items-center">
+          <Switch
+            checked={
+              options?.mergeResults ?? defaultTypebotLinkOptions.mergeResults
+            }
+            onCheckedChange={updateMergeResults}
+          />
+          <Field.Label>
+            Merge answers{" "}
+            <MoreInfoTooltip>
+              If enabled, the answers collected in the linked typebot will be
+              merged with the results of the current typebot.
+            </MoreInfoTooltip>
+          </Field.Label>
+        </Field.Root>
       )}
-    </Stack>
+    </div>
   );
 };
