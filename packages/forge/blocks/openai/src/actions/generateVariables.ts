@@ -17,6 +17,7 @@ export const generateVariables = createAction({
     models: { type: "static", items: chatModels.concat(reasoningModels) },
     getModel: ({ credentials, model }) =>
       createOpenAI({
+        baseURL: credentials.baseUrl,
         apiKey: credentials.apiKey,
         compatibility: "strict",
       })(model),
@@ -36,4 +37,24 @@ export const generateVariables = createAction({
   getSetVariableIds: (options) =>
     options.variablesToExtract?.map((v) => v.variableId).filter(isDefined) ??
     [],
+  run: {
+    server: ({ credentials, options, variables, logs }) => {
+      if (credentials?.apiKey === undefined)
+        return logs.add("No API key provided");
+
+      if (options.model === undefined) return logs.add("No model provided");
+
+      return runGenerateVariables({
+        model: createOpenAI({
+          baseURL: credentials.baseUrl ?? options.baseUrl,
+          apiKey: credentials.apiKey,
+          compatibility: "strict",
+        })(options.model),
+        prompt: options.prompt,
+        variablesToExtract: options.variablesToExtract,
+        variables,
+        logs,
+      });
+    },
+  },
 });
