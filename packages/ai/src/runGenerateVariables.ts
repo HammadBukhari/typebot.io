@@ -42,7 +42,6 @@ export const runGenerateVariables = async ({
     const { object } = await generateObject({
       model,
       schema,
-      mode: "json",
       prompt:
         `${prompt}\n\nYou should generate a JSON object` +
         (hasOptionalVariables
